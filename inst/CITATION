@@ -1,0 +1,20 @@
+citHeader("To cite gamma in publications use:")
+
+citEntry(entry = "Manual",
+  title        = "{gamma}: Dose Rate Estimation from In-Situ Gamma-Ray Spectrometry Measurements",
+  author       = c(person("Nicolas", "Frerebeau", role = c("aut", "cre")),
+                   person("Brice", "Lebrun", role = "aut"),
+                   person("Guilhem", "Paradol", role = "aut")),
+  year         = "2019",
+  organization = "Université Bordeaux Montaigne",
+  address      = "Pessac, France",
+  note         = "R package version 1.0.0",
+  url          = "https://doi.org/10.5281/zenodo.2652393",
+
+  textVersion  =
+  paste("Frerebeau, Nicolas, Brice Lebrun and Guilhem Paradol (2019).",
+        "gamma: Dose Rate Estimation from In-Situ Gamma-Ray Spectrometry Measurements.",
+        "R package version 1.0.0.",
+        "Université Bordeaux Montaigne, Pessac, France.",
+        "DOI 10.5281/zenodo.2652393.")
+)
