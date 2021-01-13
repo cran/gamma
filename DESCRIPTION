@@ -1,7 +1,7 @@
 Package: gamma
 Title: Dose Rate Estimation from in-Situ Gamma-Ray Spectrometry
         Measurements
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     c(person(given = "Nicolas",
              family = "Frerebeau",
@@ -16,7 +16,8 @@ Authors@R:
       person(given = "Guilhem",
              family = "Paradol",
              role = "aut",
-             email = "guilhem.paradol@phelma.grenoble-inp.fr"),
+             email = "guilhem.paradol@cea.fr",
+             comment = c(ORCID = "0000-0002-8561-4903")),
       person(given = "Magali",
              family = "Rizza",
              role = "ctb",
@@ -63,10 +64,10 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'baseline.R'
         'smooth_triangular.R' 'subset.R' 'summarize.R' 'utilities.R'
         'validate.R'
 NeedsCompilation: no
-Packaged: 2020-09-11 11:46:11 UTC; lebrun
+Packaged: 2021-01-13 13:05:44 UTC; lebrun
 Author: Nicolas Frerebeau [aut] (<https://orcid.org/0000-0001-5759-4944>),
   Brice Lebrun [aut, cre] (<https://orcid.org/0000-0001-7503-8685>),
-  Guilhem Paradol [aut],
+  Guilhem Paradol [aut] (<https://orcid.org/0000-0002-8561-4903>),
   Magali Rizza [ctb] (<https://orcid.org/0000-0003-2364-5621>),
   Christelle Lahaye [ctb] (<https://orcid.org/0000-0003-2215-9015>),
   Université Bordeaux Montaigne [cph, fnd],
@@ -74,4 +75,4 @@ Author: Nicolas Frerebeau [aut] (<https://orcid.org/0000-0001-5759-4944>),
   LabEx Sciences archéologiques de Bordeaux [fnd],
   Idex Aix-Marseille [fnd]
 Repository: CRAN
-Date/Publication: 2020-09-18 12:10:02 UTC
+Date/Publication: 2021-01-13 14:00:02 UTC

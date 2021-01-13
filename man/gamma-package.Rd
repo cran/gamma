@@ -20,9 +20,9 @@ Process in-situ Gamma-Ray Spectrometry for
 \tabular{ll}{
  \strong{Package:} \tab gamma \cr
  \strong{Type:} \tab Package \cr
- \strong{Version:} \tab 1.0.0 \cr
+ \strong{Version:} \tab 1.0.1 \cr
  \strong{License:} \tab GPL-3 \cr
- \strong{DOI:} \tab \href{https://doi.org/10.5281/zenodo.2652393}{10.5281/zenodo.2652393}
+ \strong{DOI:} \tab \doi{10.5281/zenodo.2652393}
 }
 }
 \note{
@@ -47,7 +47,7 @@ Useful links:
  Nicolas Frerebeau \tab \emph{Université Bordeaux Montaigne, France} \cr
  Christelle Lahaye \tab \emph{Université Bordeaux Montaigne, France} \cr
  Brice Lebrun \tab \emph{Université Bordeaux Montaigne, France} \cr
- Guilhem Paradol \tab \cr
+ Guilhem Paradol \tab \emph{Commissariat à l'Énergie Atomique, France} \cr
  Magali Rizza \tab \emph{Aix-Marseille Université, France}
 }
 
