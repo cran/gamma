@@ -18,9 +18,9 @@ signal_slice(object, ...)
 \item{object}{A \linkS4class{GammaSpectrum} or \linkS4class{GammaSpectra}
 object.}
 
-\item{...}{\code{\link{integer}} values giving the channels of the
-spectrum to be kept/dropped (see below). Numeric values are coerced to
-integer as by \code{\link{as.integer}} (and hence truncated towards zero).}
+\item{...}{\code{\link{integer}} values giving the channels of the spectrum to be
+kept/dropped (see below). Numeric values are coerced to integer as by
+\code{\link[=as.integer]{as.integer()}} (and hence truncated towards zero).}
 }
 \value{
 A \linkS4class{GammaSpectrum} or \linkS4class{GammaSpectra} object.
@@ -30,13 +30,13 @@ Choose channels by position.
 }
 \details{
 Either positive values to keep, or negative values to drop, should be
- provided. The values provided must be either all positive or all negative.
+provided. The values provided must be either all positive or all negative.
 
- If no value is provided, an attempt is made to define the number
- of channels to skip at the beginning of the spectrum. This drops all
- channels before the highest count maximum. This is intended to deal with the
- artefact produced by the rapid growth of random background noise towards low
- energies.
+If no value is provided, an attempt is made to define the number
+of channels to skip at the beginning of the spectrum. This drops all
+channels before the highest count maximum. This is intended to deal with the
+artefact produced by the rapid growth of random background noise towards low
+energies.
 }
 \examples{
 ## Import CNF files
@@ -53,14 +53,21 @@ plot(sliced)
 sliced <- signal_slice(spc, -c(1:35))
 plot(sliced)
 
-sliced <- signal_slice(spc, 450:550)
+sliced <- signal_slice(sliced, 450:550)
 plot(sliced)
+
+## Split
+g <- rep(c("A", "B", "C"), c(250, 500, 274))
+splited <- signal_split(spc, g)
+plot(splited, facet = TRUE)
 }
 \seealso{
 Other signal processing: 
 \code{\link{baseline}},
 \code{\link{peaks_find}()},
+\code{\link{peaks_search}()},
 \code{\link{signal_integrate}()},
+\code{\link{signal_split}()},
 \code{\link{signal_stabilize}()},
 \code{\link{smooth}()}
 }

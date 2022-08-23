@@ -1,5 +1,3 @@
-context("Calibrate energy scale")
-
 test_that("Calibrate a GammaSpectrum object with a list", {
   spc_file <- system.file("extdata/LaBr.CNF", package = "gamma")
   spectrum <- read(spc_file)
@@ -47,7 +45,7 @@ test_that("Calibrate a GammaSpectrum object with a PeakPosition object", {
   peaks <- .PeakPosition(
     hash = spectrum@hash,
     channel = c(76L, 459L, 816L),
-    energy = c(NA_real_, NA_real_, NA_real_)
+    energy_expected = c(NA_real_, NA_real_, NA_real_)
   )
 
   expect_error(energy_calibrate(spectrum, lines = peaks),
@@ -71,6 +69,6 @@ test_that("the energy scale of a GammaSpectrum is set", {
 
   set_file <- system.file("extdata/", package = "gamma")
   set_spc <- read(set_file)
-  expect_equivalent(has_energy(set_spc), c(TRUE, TRUE, FALSE))
+  expect_equal(has_energy(set_spc), c(TRUE, TRUE, FALSE), ignore_attr = TRUE)
 })
 

@@ -17,28 +17,30 @@ signal_stabilize(object, ...)
 \arguments{
 \item{object}{A \linkS4class{GammaSpectrum} object.}
 
-\item{...}{Extra arguments to be passed to \code{transformation}.}
+\item{...}{Extra arguments to be passed to \code{f}.}
 
 \item{f}{A \code{\link{function}} that takes a numeric vector as
 argument and returns a numeric vector.}
 }
 \value{
-A new \linkS4class{GammaSpectrum} or \linkS4class{GammaSpectra}
- object with transformed intensities.
+A \linkS4class{GammaSpectrum} or \linkS4class{GammaSpectra} object with
+transformed intensities.
 }
 \description{
 Transform Intensities
 }
 \details{
 The stabilization step aims at improving the identification of peaks with a
- low signal-to-noise ratio. This particularly targets higher energy peaks.
+low signal-to-noise ratio. This particularly targets higher energy peaks.
 }
 \seealso{
 Other signal processing: 
 \code{\link{baseline}},
 \code{\link{peaks_find}()},
+\code{\link{peaks_search}()},
 \code{\link{signal_integrate}()},
 \code{\link{signal_slice}()},
+\code{\link{signal_split}()},
 \code{\link{smooth}()}
 }
 \author{

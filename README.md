@@ -5,22 +5,26 @@
 
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/crp2a/gamma/workflows/R-CMD-check/badge.svg)](https://github.com/crp2a/gamma/actions)
-[![codecov](https://codecov.io/gh/crp2a/gamma/branch/master/graph/badge.svg)](https://codecov.io/gh/crp2a/gamma)
+[![R-CMD-check](https://github.com/crp2a/gamma/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/crp2a/gamma/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/crp2a/gamma/branch/master/graph/badge.svg)](https://app.codecov.io/gh/crp2a/gamma)
 
-[![CRAN
-Version](http://www.r-pkg.org/badges/version/gamma)](https://cran.r-project.org/package=gamma)
-[![CRAN
-checks](https://cranchecks.info/badges/worst/gamma)](https://cran.r-project.org/web/checks/check_results_gamma.html)
-[![CRAN
-Downloads](http://cranlogs.r-pkg.org/badges/gamma)](https://cran.r-project.org/package=gamma)
+<a href="https://crp2a.r-universe.dev" class="pkgdown-devel"><img
+src="https://crp2a.r-universe.dev/badges/gamma" alt="r-universe" /></a>
+<a href="https://cran.r-project.org/package=gamma"
+class="pkgdown-release"><img
+src="http://www.r-pkg.org/badges/version/gamma"
+alt="CRAN Version" /></a>
+<a href="https://cran.r-project.org/web/checks/check_results_gamma.html"
+class="pkgdown-release"><img
+src="https://cranchecks.info/badges/worst/gamma"
+alt="CRAN checks" /></a>
+<a href="https://cran.r-project.org/package=gamma"
+class="pkgdown-release"><img
+src="http://cranlogs.r-pkg.org/badges/gamma" alt="CRAN Downloads" /></a>
 
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Lifecycle:
-stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2652393.svg)](https://doi.org/10.5281/zenodo.2652393)
 [![SWH](https://archive.softwareheritage.org/badge/swh:1:dir:459ecf47c4c0bb768732bd56c5c245ddab0d33f9/)](https://archive.softwareheritage.org/swh:1:dir:459ecf47c4c0bb768732bd56c5c245ddab0d33f9;origin=https://github.com/crp2a/gamma;visit=swh:1:snp:10e6be6e5cbe735b58c45abbcbabf20b93019e9c;anchor=swh:1:rev:1b3baf8821267ed656d780ae154d347769141d0c/)
@@ -39,12 +43,25 @@ The [**gammaShiny**](https://github.com/crp2a/gammaShiny) package
 provides an enhanced graphical user interface for the main applications
 of **gamma**.
 
-To cite **gamma** in publications please use:
 
-> Lebrun, Brice, Nicolas Frerebeau, Guilhem Paradol, Guillaume Guérin,
-> Norbert Mercier, Chantal Tribolo, Christelle Lahaye, and Magalie
-> Rizza. 2020. Gamma: An R Package for Dose Rate Estimation from In-Situ
-> Gamma-Ray Spectrometry Measurements. *Ancient TL* 38 (2): 1-5.
+    To cite gamma in publications use:
+
+      Lebrun, Brice, Nicolas Frerebeau, Guilhem Paradol, Guillaume Guérin,
+      Norbert Mercier, Chantal Tribolo, Christelle Lahaye, and Magalie
+      Rizza. 2020. Gamma: An R Package for Dose Rate Estimation from
+      In-Situ Gamma-Ray Spectrometry Measurements. Ancient TL 38 (2): 1-5.
+
+    Une entrée BibTeX pour les utilisateurs LaTeX est
+
+      @Article{,
+        title = {Gamma: An R Package for Dose Rate Estimation from In-Situ Gamma-Ray Spectrometry Measurements},
+        author = {Brice Lebrun and Nicolas Frerebeau and Guilhem Paradol and Guillaume Guérin and Norbert Mercier and Chantal Tribolo and Christelle Lahaye and Magali Rizza},
+        year = {2020},
+        journal = {Ancient TL},
+        volume = {38},
+        number = {2},
+        pages = {1-5},
+      }
 
 ## Installation
 
@@ -55,11 +72,11 @@ You can install the released version of **gamma** from
 install.packages("gamma")
 ```
 
-Or install the development version from GitHub with:
+Or install the development version from
+[R-universe](https://crp2a.r-universe.dev/) with:
 
 ``` r
-# install.packages("remotes")
-remotes::install_github("crp2a/gamma")
+install.packages("gamma", repos = "https://crp2a.r-universe.dev")
 ```
 
 ## Usage
