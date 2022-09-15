@@ -12,7 +12,7 @@
 
 <meta name="author" content="N. Frerebeau, B. Lebrun" />
 
-<meta name="date" content="2022-08-23" />
+<meta name="date" content="2022-09-14" />
 
 <title>Calibration Curve</title>
 
@@ -122,13 +122,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -334,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Calibration Curve</h1>
 <h4 class="author">N. Frerebeau, B. Lebrun</h4>
-<h4 class="date">2022-08-23</h4>
+<h4 class="date">2022-09-14</h4>
 
 
 <div id="TOC">
@@ -526,7 +533,7 @@ rate prediction.</p>
 <span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the calibration curve</span></span>
 <span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>AIX_NaI <span class="ot">&lt;-</span> <span class="fu">dose_fit</span>(</span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  spc_scaled, <span class="at">background =</span> bkg_scaled, <span class="at">doses =</span> doses,</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">range_Ni =</span> Ni_range, <span class="at">range_NiEi =</span> NiEi_range, <span class="at">alpha =</span> <span class="fl">0.05</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">range_Ni =</span> Ni_range, <span class="at">range_NiEi =</span> NiEi_range,</span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">details =</span> info</span>
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
@@ -632,19 +639,19 @@ rate prediction.</p>
 #&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     
 #&gt; 
 #&gt; other attached packages:
-#&gt; [1] magrittr_2.0.3 gamma_1.0.2   
+#&gt; [1] magrittr_2.0.3 gamma_1.0.3   
 #&gt; 
 #&gt; loaded via a namespace (and not attached):
 #&gt;  [1] Rcpp_1.0.9       highr_0.9        bslib_0.4.0      compiler_4.2.1  
-#&gt;  [5] pillar_1.8.0     jquerylib_0.1.4  tools_4.2.1      digest_0.6.29   
+#&gt;  [5] pillar_1.8.1     jquerylib_0.1.4  tools_4.2.1      digest_0.6.29   
 #&gt;  [9] jsonlite_1.8.0   evaluate_0.16    lifecycle_1.0.1  tibble_3.1.8    
-#&gt; [13] gtable_0.3.0     pkgconfig_2.0.3  rlang_1.0.4      DBI_1.1.3       
-#&gt; [17] cli_3.3.0        rstudioapi_0.13  yaml_2.3.5       xfun_0.32       
-#&gt; [21] fastmap_1.1.0    rxylib_0.2.8     stringr_1.4.0    dplyr_1.0.9     
-#&gt; [25] knitr_1.39       generics_0.1.3   sass_0.4.2       vctrs_0.4.1     
+#&gt; [13] gtable_0.3.1     pkgconfig_2.0.3  rlang_1.0.5      DBI_1.1.3       
+#&gt; [17] cli_3.4.0        rstudioapi_0.14  yaml_2.3.5       xfun_0.32       
+#&gt; [21] fastmap_1.1.0    rxylib_0.2.8     stringr_1.4.1    dplyr_1.0.10    
+#&gt; [25] knitr_1.40       generics_0.1.3   sass_0.4.2       vctrs_0.4.1     
 #&gt; [29] tidyselect_1.1.2 grid_4.2.1       glue_1.6.2       R6_2.5.1        
-#&gt; [33] fansi_1.0.3      rmarkdown_2.14   farver_2.1.1     purrr_0.3.4     
-#&gt; [37] ggplot2_3.3.6    IsoplotR_4.4     scales_1.2.0     htmltools_0.5.3 
+#&gt; [33] fansi_1.0.3      rmarkdown_2.16   farver_2.1.1     purrr_0.3.4     
+#&gt; [37] ggplot2_3.3.6    IsoplotR_4.4     scales_1.2.1     htmltools_0.5.3 
 #&gt; [41] assertthat_0.2.1 colorspace_2.0-3 labeling_0.4.2   utf8_1.2.2      
 #&gt; [45] stringi_1.7.8    munsell_0.5.0    cachem_1.0.6</code></pre>
 </div>

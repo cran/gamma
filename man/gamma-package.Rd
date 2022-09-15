@@ -9,13 +9,13 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Process in-situ Gamma-Ray Spectrometry for Luminescence Dating. This package allows to import, inspect and correct the energy shifts of Gamma-ray spectra. It provides methods for estimating the gamma dose rate by the use of a calibration curve. The package only supports Canberra CNF and TKA files.
+Process in-situ Gamma-Ray Spectrometry for Luminescence Dating. This package allows to import, inspect and correct the energy shifts of Gamma-ray spectra. It provides methods for estimating the gamma dose rate by the use of a calibration curve as described in Mercier and Falguères (2007). The package only supports Canberra CNF and TKA files.
 }
 \details{
 \tabular{ll}{
 \strong{Package:} \tab gamma \cr
 \strong{Type:} \tab Package \cr
-\strong{Version:} \tab 1.0.1.9000 \cr
+\strong{Version:} \tab 1.0.3 \cr
 \strong{License:} \tab GPL-3 \cr
 \strong{Zenodo:} \tab \doi{10.5281/zenodo.2652393}
 }
@@ -48,10 +48,10 @@ Magali Rizza \tab \emph{Aix-Marseille Université, France}
 
 \strong{Package maintainer}
 
-Brice Lebrun\cr
-\email{brice.lebrun@u-bordeaux-montaigne.fr}
+Nicolas Frerebeau\cr
+\email{services-archeosciences@u-bordeaux-montaigne.fr}
 
-IRAMAT-CRP2A (UMR 5060)\cr
+Archéosciences Bordeaux (UMR 6034)\cr
 Maison de l'Archéologie\cr
 Université Bordeaux Montaigne\cr
 F-33607 Pessac cedex\cr

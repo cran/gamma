@@ -1,7 +1,7 @@
 Package: gamma
 Title: Dose Rate Estimation from in-Situ Gamma-Ray Spectrometry
         Measurements
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: 
     c(person(given = "Nicolas",
              family = "Frerebeau",
@@ -42,7 +42,8 @@ Authors@R:
 Description: Process in-situ Gamma-Ray Spectrometry for
     Luminescence Dating. This package allows to import, inspect and
     correct the energy shifts of Gamma-ray spectra. It provides methods
-    for estimating the gamma dose rate by the use of a calibration curve.
+    for estimating the gamma dose rate by the use of a calibration curve 
+    as described in Mercier and Falguères (2007).
     The package only supports Canberra CNF and TKA files.
 License: GPL-3
 URL: https://crp2a.github.io/gamma/, https://github.com/crp2a/gamma
@@ -68,7 +69,7 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'baseline.R'
         'smooth_triangular.R' 'subset.R' 'summarize.R' 'utilities.R'
         'validate.R' 'zzz.R'
 NeedsCompilation: no
-Packaged: 2022-08-23 13:07:57 UTC; nicolas
+Packaged: 2022-09-14 12:58:31 UTC; nicolas
 Author: Nicolas Frerebeau [aut] (<https://orcid.org/0000-0001-5759-4944>),
   Brice Lebrun [aut] (<https://orcid.org/0000-0001-7503-8685>),
   Guilhem Paradol [aut] (<https://orcid.org/0000-0002-8561-4903>),
@@ -81,4 +82,4 @@ Author: Nicolas Frerebeau [aut] (<https://orcid.org/0000-0001-5759-4944>),
   Idex Aix-Marseille [fnd]
 Maintainer: Archéosciences Bordeaux <services-archeosciences@u-bordeaux-montaigne.fr>
 Repository: CRAN
-Date/Publication: 2022-08-23 14:30:02 UTC
+Date/Publication: 2022-09-15 09:10:12 UTC
