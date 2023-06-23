@@ -9,7 +9,6 @@ knitr::opts_chunk$set(
 
 ## ----packages-----------------------------------------------------------------
 library(gamma)
-library(magrittr)
 
 ## ----import-------------------------------------------------------------------
 # Import CNF files for calibration
@@ -23,10 +22,10 @@ bkg_dir <- system.file("extdata/AIX_NaI_1/background", package = "gamma")
 ## ----signal-------------------------------------------------------------------
 # Spectrum pre-processing
 # Remove baseline for peak detection
-bsl <- spc %>%
-  signal_slice(-1:-40) %>%
-  signal_stabilize(f = sqrt) %>%
-  signal_smooth(method = "savitzky", m = 21) %>%
+bsl <- spc |>
+  signal_slice(-1:-40) |>
+  signal_stabilize(f = sqrt) |>
+  signal_smooth(method = "savitzky", m = 21) |>
   signal_correct()
 
 ## ----calibrate-BRIQUE---------------------------------------------------------

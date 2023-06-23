@@ -105,14 +105,12 @@ calib_lines <- list(
 scaled2 <- energy_calibrate(spc_tka, lines = calib_lines)
 
 ## ----pipe, fig.width=7, fig.height=5, fig.align="center", fig.show="hold"-----
-library(magrittr)
-
 # Spectrum pre-processing and peak detection
-pks <- spc_tka %>%
-  signal_slice() %>%
-  signal_stabilize(f = sqrt) %>%
-  signal_smooth(method = "savitzky", m = 21) %>%
-  signal_correct(method = "SNIP", decreasing = TRUE, n = 100) %>%
+pks <- spc_tka |>
+  signal_slice() |>
+  signal_stabilize(f = sqrt) |>
+  signal_smooth(method = "savitzky", m = 21) |>
+  signal_correct(method = "SNIP", decreasing = TRUE, n = 100) |>
   peaks_find()
 
 # Set the energy values (in keV)
