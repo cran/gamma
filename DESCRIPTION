@@ -1,7 +1,7 @@
 Package: gamma
 Title: Dose Rate Estimation from in-Situ Gamma-Ray Spectrometry
         Measurements
-Version: 1.0.4
+Version: 1.0.5
 Authors@R: c(
     person("Nicolas", "Frerebeau", , "nicolas.frerebeau@u-bordeaux-montaigne.fr", role = "aut",
            comment = c(ORCID = "0000-0001-5759-4944")),
@@ -37,7 +37,7 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Collate: 'AllClasses.R' 'AllGenerics.R' 'baseline.R'
         'baseline_linear.R' 'baseline_rubberband.R' 'baseline_snip.R'
         'coerce.R' 'data.R' 'dose_fit.R' 'dose_predict.R'
@@ -49,7 +49,7 @@ Collate: 'AllClasses.R' 'AllGenerics.R' 'baseline.R'
         'smooth_triangular.R' 'subset.R' 'summarize.R' 'utilities.R'
         'validate.R' 'zzz.R'
 NeedsCompilation: no
-Packaged: 2023-06-23 10:41:45 UTC; nicolas
+Packaged: 2024-04-08 15:32:23 UTC; nicolas
 Author: Nicolas Frerebeau [aut] (<https://orcid.org/0000-0001-5759-4944>),
   Brice Lebrun [aut] (<https://orcid.org/0000-0001-7503-8685>),
   Guilhem Paradol [aut] (<https://orcid.org/0000-0002-8561-4903>),
@@ -62,4 +62,4 @@ Author: Nicolas Frerebeau [aut] (<https://orcid.org/0000-0001-5759-4944>),
   Idex Aix-Marseille [fnd]
 Maintainer: Archéosciences Bordeaux <services-archeosciences@u-bordeaux-montaigne.fr>
 Repository: CRAN
-Date/Publication: 2023-06-23 11:30:02 UTC
+Date/Publication: 2024-04-08 16:00:02 UTC
