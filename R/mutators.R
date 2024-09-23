@@ -258,7 +258,7 @@ setMethod(
     new_model <- stats::update(model, new_coef)
 
     data.frame(
-      names = data$names,
+      names = data$name,
       fitted = new_model$fitted.values,
       residuals = new_model$residuals,
       standardized = stats::rstandard(new_model),
@@ -321,6 +321,29 @@ setMethod(
   }
 )
 
+#' @export
+#' @rdname mutator
+#' @aliases set_energy_calibration,GammaSpectrum-method
+setMethod(
+  f = "set_energy_calibration<-",
+  signature = "GammaSpectrum",
+  definition = function(x, value) {
+    x <- energy_calibrate(object = x, lines = value)
+    x
+  }
+)
+
+#' @export
+#' @rdname mutator
+#' @aliases get_energy_calibration,GammaSpectrum-method
+setMethod(
+  f = "get_energy_calibration",
+  signature = "GammaSpectrum",
+  definition = function(x) {
+    x@calibration
+  }
+)
+
 ## Baseline --------------------------------------------------------------------
 #' @export
 #' @rdname mutator
@@ -350,6 +373,30 @@ setMethod(
     x
   }
 )
+
+#' @export
+#' @rdname mutator
+#' @aliases set_energy_calibration,GammaSpectra-method
+setMethod(
+  f = "set_energy_calibration<-",
+  signature = "GammaSpectra",
+  definition = function(x, value) {
+    x <- energy_calibrate(object = x, lines = value)
+    x
+  }
+)
+
+#' @export
+#' @rdname mutator
+#' @aliases get_energy_calibration,GammaSpectra-method
+setMethod(
+  f = "get_energy_calibration",
+  signature = "GammaSpectra",
+  definition = function(x) {
+    lapply(x, function(y) y@calibration)
+  }
+)
+
 
 ## PeakPosition ----------------------------------------------------------------
 #' @export

@@ -11,6 +11,19 @@ test_that("Read a CNF file", {
   cnf_spectrum <- read(cnf_file)
   expect_output(show(cnf_spectrum), "Gamma spectrum")
 })
+test_that("Read a SPE file", {
+  spe_file <- system.file("extdata/xxx.spe", package = "gamma")
+  expect_error(read(spe_file))
+
+  spe_file <- system.file("extdata/Kromek_CZT.spe", package = "gamma")
+  spe_spectrum <- read(spe_file)
+  expect_output(show(spe_spectrum), "Gamma spectrum")
+
+  ## check whether the definition is valid
+  writeLines("test", t <- tempfile(pattern = "test", fileext = ".spe"))
+  expect_error(read(t), regexp = "Kromek SPE does not follow implemented definition!")
+
+})
 test_that("Read a set of CNF files", {
   spc_dir <- system.file("extdata/xxx", package = "gamma")
   expect_error(read(spc_dir))

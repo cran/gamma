@@ -2,7 +2,7 @@
 #' \tabular{ll}{
 #'  **Package:** \tab gamma \cr
 #'  **Type:** \tab Package \cr
-#'  **Version:** \tab 1.0.5 \cr
+#'  **Version:** \tab 1.1.0 \cr
 #'  **License:** \tab GPL-3 \cr
 #'  **Zenodo:** \tab \doi{10.5281/zenodo.2652393}
 #' }
@@ -11,6 +11,7 @@
 #'
 #' \tabular{ll}{
 #'  Nicolas Frerebeau \tab *Université Bordeaux Montaigne, France* \cr
+#'  Sebastian Kreutzer \tab *Universität Heidelberg, Germany* \cr
 #'  Christelle Lahaye \tab *Université Bordeaux Montaigne, France* \cr
 #'  Brice Lebrun \tab *Université Bordeaux Montaigne, France* \cr
 #'  Guilhem Paradol \tab *Commissariat à l'Énergie Atomique, France* \cr
@@ -30,8 +31,7 @@
 #' @note
 #' This work received a state financial support managed by the Agence Nationale
 #' de la Recherche (France) through the program *Investissements d'avenir*
-#' (ref. [ANR-10-LABX-52](https://lascarbx.labex.u-bordeaux.fr) and
-#' [11-IDEX-0001](https://www.univ-amu.fr/amidex/)).
+#' (ref. ANR-10-LABX-52 and 11-IDEX-0001).
 #' @name gamma-package
 #' @aliases gamma-package gamma
 #' @docType package

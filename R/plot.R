@@ -112,14 +112,14 @@ setMethod(
   signature = signature(x = "GammaSpectrum", y = "PeakPosition"),
   definition = function(x, y, split = FALSE, span = 25) {
     # Validation
-    if (x@hash != y@hash)
+    if (y@hash != "<man_coercion_list2PeakPosition>" && x@hash != y@hash)
       stop("`x` and `y` do not match.", call. = FALSE)
 
     # Get data
     pks <- as.data.frame(y)
     pks$name <- paste(get_names(x), pks$channel, sep = "_")
     peak_channel <- pks$channel
-    peak_energy <- pks$energy_observed
+    peak_energy <- if (all(is.na(pks$energy_expected))) pks$energy_observed else pks$energy_expected
 
     index_energy <- !is.na(peak_energy)
     if (any(index_energy)) {
@@ -211,7 +211,7 @@ setMethod(
     }
 
     ggplot(data = data) +
-      aes(x = .data$signal_value, y = .data$gamma_dose, label = .data$names) +
+      aes(x = .data$signal_value, y = .data$gamma_dose, label = .data$name) +
       geom_segment(
         data = segment,
         mapping = aes(x = .data$x, xend = .data$xmin,
@@ -220,7 +220,7 @@ setMethod(
       ) +
       geom_point() +
       ggellipse + ggbar +
-      labs(x = sprintf("Signal [%s]", k), y = expression("Dose rate ["*mu*"Gy/y]"))
+      labs(x = sprintf("Integrated signal [%s]", k), y = expression("Dose rate ["*mu*"Gy/y]"))
   }
 )
 

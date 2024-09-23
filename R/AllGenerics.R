@@ -62,6 +62,20 @@ setGeneric(
 )
 
 #' @rdname mutator
+#' @aliases get_energy_calibration-method
+setGeneric(
+  name = "get_energy_calibration",
+  def = function(x) standardGeneric("get_energy_calibration")
+)
+
+#' @rdname mutator
+#' @aliases set_energy_calibration-method
+setGeneric(
+  name = "set_energy_calibration<-",
+  def = function(x, value) standardGeneric("set_energy_calibration<-")
+)
+
+#' @rdname mutator
 #' @aliases get_livetime-method
 setGeneric(
   name = "get_livetime",
@@ -213,7 +227,10 @@ NULL
 #' @param lines A [PeakPosition-class] object or a [`list`] of length two. If a
 #'  `list` is provided, each element must be a named numeric vector giving the
 #'  observed peak position ("`channel`") and the corresponding expected
-#'  "`energy`" value (in keV).
+#'  "`energy`" value (in keV). Alternatively, the function accepts the [stats::lm]
+#'  object from a another calibration or a [GammaSpectrum-class] object from which such
+#'  calibration is copied. With this, energy calibrations can be transferred from one object
+#'  to another.
 #' @param ... Currently not used.
 #' @details
 #'  The energy calibration of a spectrum is the most tricky part. To do this,
@@ -233,7 +250,8 @@ NULL
 #'  Regardless of the approach you choose, it is strongly recommended to check
 #'  the result before proceeding.
 #' @return
-#'  * `energy_calibrate()` returns a [GammaSpectrum-class] object.
+#'  * `energy_calibrate()` returns either a [GammaSpectrum-class] or a [GammaSpectra-class]
+#'  object depending on the input#
 #'  * `has_energy()` and `has_calibration()` return a [`logical`] vector.
 #' @example inst/examples/ex-energy.R
 #' @author N. Frerebeau
@@ -384,14 +402,15 @@ setGeneric(
 # Dose rate ====================================================================
 #' Dose Rate Estimation
 #'
-#' \code{dose_fit} builds a calibration curve for gamma dose rate estimation.
-#'
-#' \code{dose_predict} predicts in situ gamma dose rate.
+#' @description
+#' * `dose_fit()` builds a calibration curve for gamma dose rate estimation.
+#' * `dose_predict()` predicts in situ gamma dose rate.
 #' @param object A [GammaSpectra-class] or [CalibrationCurve-class] object.
-#' @param background A [GammaSpectrum-class] object of a length-two [`numeric`]
+#' @param background A [GammaSpectrum-class] object or a length-two [`numeric`]
 #'  vector giving the background noise integration value and error,
-#'  respectively.
-#' @param doses A [`matrix`] or [`data.frame`] TODO.
+#'  respectively. If no background subtraction is wanted, you can set `background = c(0,0,)`
+#' @param doses A [`matrix`] or [`data.frame`] object with gamma dose values and uncertainties.
+#' The row names must match the names of the spectrum.
 #' @param range_Ni,range_NiEi A length-two [`numeric`] vector giving the energy
 #'  range to integrate within (in keV).
 #' @param details A [`list`] of length-one vector specifying additional
@@ -399,9 +418,17 @@ setGeneric(
 #' @param spectrum An optional [GammaSpectrum-class] or [GammaSpectra-class]
 #'  object in which to look for variables with which to predict. If omitted,
 #'  the fitted values are used.
-#' @param sigma A [`numeric`] value giving TODO.
-#' @param epsilon A [`numeric`] value giving an extra error term
-#'  introduced by the calibration of the energy scale of the spectrum.
+#' @param sigma A [`numeric`] value giving the confidence level of which the error from the
+#' slope is considered in the final uncertainty calculation
+#' @param epsilon A [`numeric`] value giving an extra relative error term,
+#'  introduced by the calibration of the energy scale of the spectrum,
+#'  e.g., `0.015` for an additional 1.5% error
+#' @param water_content [`numeric`] or [`matrix`] gravimetric field water content to correct
+#' the gamma-dose rate to using the correction factor by Aitken (1985) to obtain the dry gamma-dose
+#' rate. Example: `c(0.05,0.0001)` for water content of 5% +/- 0.01 %. The default is `NULL` (nothing is corrected).
+#' The correction only works on the final dose rate. For more information see details.
+#' @param use_MC A [`logical`] parameter, enabling/disabling Monte Carlo simulations for estimating
+#' the dose rate uncertainty
 #' @param ... Currently not used.
 #' @details
 #'  To estimate the gamma dose rate, one of the calibration curves distributed
@@ -417,21 +444,76 @@ setGeneric(
 #'  is finally modelled by the integrated signal value used as a linear
 #'  predictor (York *et al.*, 2004).
 #'
+#' @section Uncertainty calculation of the gamma-dose rate:
+#'  The analytical uncertainties of the final gamma-dose rate (\eqn{SE(\dot{D}_{\gamma})}) are calculated as
+#'  follows:
+#'
+#'  \deqn{
+#'  \sigma_{\dot{D_\gamma}} = \sqrt((\frac{m_{\delta}s}{m})^2 + (\frac{s_{\delta}}{s})^2 + \epsilon^2)
+#'  }
+#'
+#'  with \eqn{m} and \eqn{m_{\delta}} being the slope of the fit an its uncertainty,
+#'  \eqn{\sigma} the error scaler for the slope uncertainty, \eqn{s} and \eqn{s_{\delta}}
+#'  the integrated signal and its uncertainty, and \eqn{\epsilon} an additional relative uncertainty
+#'  term that can be set by the user using the argument `epsilon`.
+#'
+#'  If the parameter `use_MC` is set to `TRUE`, the a Monte Carlo sampling approach
+#'  is chosen to approximate the uncertainties on the dose rate:
+#'
+#'  \deqn{
+#'    \sigma_{\dot{D_\gamma}} :=
+#'    \sqrt((\frac{SD(\mathcal{N}(\mu_{slope}, \sigma_{slope}) \times \mathcal{N}(\mu_{signal}, \sigma_{signal}) +
+#'    \mathcal{N}(\mu_{intercept}, \sigma_{intercept})) * \rho}{\dot{D_\gamma}})^2 +
+#'    \epsilon^2) * \dot{D_\gamma}
+#'  }
+#'
+#'  \eqn{\ rho} is the parameter `sigma` provided with the function call, \eqn{SD} equals the
+#'  the call to `sd()`, i.e. the calculation of the standard deviation. To achieve a good
+#'  Gaussian normal approximation with sample 1+e06 times (the values is fixed).
+#'
+#' @section Water content correction:
+#'  If gamma-dose rates are measured in the field, they are measured at  "as-is"
+#'  conditions. In dating studies, however, using the dry dose rate is often
+#'  more desirable to model the long-term effect of different assumptions for
+#'  the water content. If the parameter `water_content`, either as [numeric]
+#'  vector or as [matrix] with the number of rows equal to the number of
+#'  processed spectra,  if different values are desired, the **final**
+#'  gamma-dose rate is corrected for the water content provided. Final
+#'  uncertainties are obtained using the square root of the summed squared
+#'  relative uncertainties of the dose rate and the water content.
+#'
+#'  A word of caution: When estimating the water content in the laboratory,
+#'  the water analytical uncertainty is usually minimal, and it does not make
+#'  sense to correct with a relative water content of, e.g., c(0.02,0.02)
+#'  (2% +/- 2%) because this massively inflates the final dose rate error.
+#' @note
 #'  See `vignette(doserate)` for a reproducible example.
 #' @return
 #'  * `dose_fit()` returns a [CalibrationCurve-class] object.
 #'  * `dose_predict()` returns a [`data.frame`] with the following columns:
 #'  \describe{
 #'   \item{`name`}{([`character`]) the name of the spectra.}
-#'   \item{`*_signal`}{([`numeric`]) the integrated signal value (according to
+#'   \item{`signal_Ni`}{([`numeric`]) the integrated signal value (according to
+#'   the value of `threshold`; see [signal_integrate()]) for `energy = FALSE`}
+#'   \item{`signal_err_Ni`}{([`numeric`]) the integrated signal error value
+#'   (according to the value of `threshold`; see [signal_integrate()]) for `energy = FALSE`.}
+#'   \item{`dose_Ni`}{([`numeric`]) the predicted gamma dose rate for `energy = FALSE`.}
+#'   \item{`dose_err_Ni`}{([`numeric`]) the predicted gamma dose rate error for `energy = FALSE`.}
+#'   \item{`signal_Ni`}{([`numeric`]) the integrated signal value (according to
 #'   the value of `threshold`; see [signal_integrate()]).}
-#'   \item{`*_error`}{([`numeric`]) the integrated signal error value
-#'   (according to the value of `threshold`; see [signal_integrate()]).}
-#'   \item{`gamma_signal`}{([`numeric`]) the predicted gamma dose rate.}
-#'   \item{`gamma_error`}{([`numeric`]) the predicted gamma dose rate error.}
+#'   \item{`signal_err_NiEi`}{([`numeric`]) the integrated signal error value
+#'   (according to the value of `threshold`; see [signal_integrate()]) for `energy = TRUE`.}
+#'   \item{`dose_NiEi`}{([`numeric`]) the predicted gamma dose rate for `energy = TRUE`.}
+#'   \item{`dose_err_NiEi`}{([`numeric`]) the predicted gamma dose rate error for `energy = TRUE`.}
+#'   \item{`dose_final`}{([`numeric`]) the predicted final gamma dose rate as the mean of `dose_Ni` and `dose_NiEi`}
+#'   \item{`dose_err_final`}{([`numeric`]) the predicted final gamma dose rate error as
+#'    \eqn{SE(\dot{D}_{\gamma}) = \sqrt{(\frac{SE(\dot{D}_{\gamma\mathrm{Ni}})}{\dot{D}_{\gamma\mathrm{Ni}}})^2 +
+#'    (\frac{SE(\dot{D}_{\gamma\mathrm{NiEi}})}{\dot{D}_{\gamma\mathrm{NiEi}}})^2}}}
 #'  }
 #' @seealso [signal_integrate()]
 #' @references
+#'  Aitken, M.J. (1985). *Thermoluminescence dating*. London: Academic Press.
+#'
 #'  Mercier, N. & Falguères, C. (2007). Field Gamma Dose-Rate Measurement with
 #'  a NaI(Tl) Detector: Re-Evaluation of the "Threshold" Technique.
 #'  *Ancient TL*, 25(1), p. 1-4.
@@ -465,16 +547,45 @@ setGeneric(
 # Integrate ====================================================================
 #' Signal Integration
 #'
+#' Integration of the spectrum including uncertainty calculation.
 #' @param object A [GammaSpectrum-class] or [GammaSpectra-class] object.
 #' @param background A [GammaSpectrum-class] object.
 #' @param range A length-two [`numeric`] vector giving the energy range to
 #'  integrate within (in keV).
-#' @param energy A [`logical`] scalar: TODO?
+#' @param energy A [`logical`] scalar: use the energy or count threshold for the signal integration
 #' @param simplify A [`logical`] scalar: should the result be simplified to a
 #'  [`matrix`]? The default value, `FALSE`, returns a [`list`].
 #' @param ... Currently not used.
 #' @details
-#'  It assumes that each spectrum has an energy scale.
+#'  The function supports two integration techniques (see Guérin & Mercier 2011),
+#'  the (1) count threshold integration and the (2) energy integration method:
+#'
+#'  The count integration technique (`energy = FALSE`) integrates
+#'  all counts in given `range`:
+#'
+#'  \deqn{
+#'    A = \frac{\Sigma_{i}^{N}S_i}{t_{live}}
+#'  }
+#'
+#'  Contrary, the energy integration techniques is the integrated cross-product
+#'  of counts and corresponding energy per channel:
+#'
+#'  \deqn{
+#'   A = \frac{\Sigma_{i}^{N}S_i \times E_i}{t_{live}}
+#'  }
+#'
+#'  \eqn{A} is the area, \eqn{S_i} is the signal in the \eqn{i^{th}} channel,
+#'  \eqn{N} the number of channels, \eqn{E_i} the energy of the corresponding
+#'  channel in keV. \eqn{t_{live}} is the live time of the measurement in *s*.
+#'
+#'  For calculating the uncertainties, Poisson statistics are assumed and hence
+#'  the errors is calculated as:
+#'
+#'  \deqn{
+#'  \sigma_A = \frac{\sqrt{A}}{t_{live}}
+#'  }
+#'
+#' @note The integration assumes that each spectrum has an energy scale.
 #' @return
 #'  If `simplify` is `FALSE` (the default) returns a [`list`] of numeric vectors
 #'  (the signal value and its error), else returns a [`matrix`].
@@ -579,7 +690,8 @@ setGeneric(
 #'  for the error ellipses.
 #' @param n A length-one [`numeric`] vector giving the resolution of the error
 #'  ellipses.
-#' @param energy A [`logical`] scalar: TODO.
+#' @param energy A [`logical`] scalar plotting the count threshold value or the
+#' energy threshold value
 #' @param ... Currently not used.
 #' @return
 #'  A [ggplot2::ggplot] object.
@@ -604,10 +716,10 @@ if (!isGeneric("plot")) {
 #' Reads a gamma ray spectrum file.
 #' @param file A [`character`] string giving the path of files to be imported.
 #' @param extensions A [`character`] vector specifying the possible
-#'  file extensions. It must be one or more of "`cnf`", "`tka`".
+#'  file extensions. It must be one or more of "`cnf`", "`tka`", "`spe`".
 #' @param ... Extra parameters to be passed to [rxylib::read_xyData()].
 #' @note
-#'  Only supports Canberra CNF and TKA files.
+#'  Supports Canberra CNF and TKA and Kromek SPE files.
 #' @return
 #'  A [GammaSpectra-class] object if more than one spectrum are imported
 #'  at once, else a [GammaSpectrum-class] object.

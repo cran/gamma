@@ -4,6 +4,67 @@ NULL
 
 #' @export
 #' @rdname energy
+#' @aliases energy_calibrate,GammaSpectrum,lm-method
+setMethod(
+  f = "energy_calibrate",
+  signature = signature(object = "GammaSpectrum", lines = "lm"),
+  definition = function(object, lines, ...) {
+
+    # Get spectrum data
+    spc_data <- as.data.frame(object)
+
+    ## Predict shifted energy values
+    fit_spc <- stats::predict(lines, spc_data[, "channel", drop = FALSE])
+
+    # Return a new gamma spectrum with adjusted energy
+    methods::initialize(object, energy = fit_spc, calibration = lines)
+
+})
+
+#' @export
+#' @rdname energy
+#' @aliases energy_calibrate,GammaSpectrum,lm-method
+setMethod(
+  f = "energy_calibrate",
+  signature = signature(object = "GammaSpectrum", lines = "GammaSpectrum"),
+  definition = function(object, lines, ...) {
+    if(!has_calibration(lines))
+      stop("The spectrum provided via 'lines' does not have any calibration!", call. = FALSE)
+
+    ## get calibration
+    lines <- lines@calibration
+
+    ## call the regular function
+    energy_calibrate(object, lines)
+
+})
+
+#' @export
+#' @rdname energy
+#' @aliases energy_calibrate,GammaSpectrum,CalibrationCurve-method
+setMethod(
+  f = "energy_calibrate",
+  signature = signature(object = "GammaSpectrum", lines = "CalibrationCurve"),
+  definition = function(object, lines, ...) {
+    if (is.null(lines@details$energy_calibration) || any(is.na(lines@details$energy_calibration)))
+      stop("The CalibrationCurve-class object provided via 'lines' does not have any energy calibration!",
+           call. = FALSE)
+
+    ## check for multiple calibrations
+    if (length(lines@details$energy_calibration) > 1)
+      stop("Found more than one energy calibration in the CalibrationCurve-class object! Could not decide which one to take!",
+           call. = FALSE)
+
+    ## get calibration
+    lines <- lines@details$energy_calibration[[1]]
+
+    ## call the regular function
+    energy_calibrate(object, lines)
+
+})
+
+#' @export
+#' @rdname energy
 #' @aliases energy_calibrate,GammaSpectrum,list-method
 setMethod(
   f = "energy_calibrate",
@@ -61,6 +122,92 @@ setMethod(
   }
 )
 
+#' @export
+#' @rdname energy
+#' @aliases energy_calibrate,GammaSpectra,list-method
+setMethod(
+  f = "energy_calibrate",
+  signature = signature(object = "GammaSpectra", lines = "list"),
+  definition = function(object, lines, ...) {
+    ## just call the regular function
+    spc <- lapply(unlist(object), energy_calibrate, lines)
+
+    ## make create GammaSpectra class
+    methods::as(spc, "GammaSpectra")
+
+  }
+)
+
+#' @export
+#' @rdname energy
+#' @aliases energy_calibrate,GammaSpectra,PeakPosition-method
+setMethod(
+  f = "energy_calibrate",
+  signature = signature(object = "GammaSpectra", lines = "PeakPosition"),
+  definition = function(object, lines, ...) {
+    # Get data
+    peaks <- as.data.frame(lines)
+    peaks$energy <- peaks$energy_expected
+
+    # Adjust spectrum for energy shift using the same set of peask for
+    # the entire set of gamma spectra
+    # Return a new gamma spectrum with adjusted energy
+    spc <- lapply(unlist(object), energy_calibrate, peaks)
+
+    ## make create GammaSpectra class
+    methods::as(spc, "GammaSpectra")
+
+  }
+)
+
+#' @export
+#' @rdname energy
+#' @aliases energy_calibrate,GammaSpectra,PeakPosition-method
+setMethod(
+  f = "energy_calibrate",
+  signature = signature(object = "GammaSpectra", lines = "lm"),
+  definition = function(object, lines, ...) {
+    # Adjust spectrum for energy shift using the same set of peaks for
+    # the entire set of gamma spectra
+    # Return a new gamma spectrum with adjusted energy
+    spc <- lapply(unlist(object), energy_calibrate, lines)
+
+    ## make create GammaSpectra class
+    methods::as(spc, "GammaSpectra")
+
+  }
+)
+
+#' @export
+#' @rdname energy
+#' @aliases energy_calibrate,GammaSpectra,PeakPosition-method
+setMethod(
+  f = "energy_calibrate",
+  signature = signature(object = "GammaSpectra", lines = "GammaSpectrum"),
+  definition = function(object, lines, ...) {
+    spc <- lapply(unlist(object), energy_calibrate, lines)
+
+    ## make create GammaSpectra class
+    methods::as(spc, "GammaSpectra")
+
+  }
+)
+
+#' @export
+#' @rdname energy
+#' @aliases energy_calibrate,GammaSpectra,CalibrationCurve-method
+setMethod(
+  f = "energy_calibrate",
+  signature = signature(object = "GammaSpectra", lines = "CalibrationCurve"),
+  definition = function(object, lines, ...) {
+    spc <- lapply(unlist(object), energy_calibrate, lines)
+
+    ## make create GammaSpectra class
+    methods::as(spc, "GammaSpectra")
+
+  }
+)
+
 # Predicates ===================================================================
 #' @export
 #' @rdname energy
@@ -99,5 +246,17 @@ setMethod(
   signature = "GammaSpectra",
   definition = function(object) {
     vapply(object, FUN = has_calibration, FUN.VALUE = logical(1))
+  }
+)
+
+#' @export
+#' @rdname energy
+#' @aliases has_calibration,CalibrationCurve-method
+setMethod(
+  f = "has_calibration",
+  signature = "CalibrationCurve",
+  definition = function(object) {
+    !is.null(object@details$energy_calibration) &
+      !any(is.na(object@details$energy_calibration))
   }
 )

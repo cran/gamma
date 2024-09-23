@@ -9,13 +9,6 @@ knitr::opts_chunk$set(
 ## ----packages-----------------------------------------------------------------
 library(gamma)
 
-## ----calib-dose, eval=FALSE---------------------------------------------------
-#  # IRAMAT-CRP2A LaBr (BDX1)
-#  utils::vignette("CRP2A#1", package = "gamma")
-#  
-#  # CEREGE NaI (AIX1)
-#  utils::vignette("CEREGE#1", package = "gamma")
-
 ## ----import-------------------------------------------------------------------
 # Automatically skip the first channels
 # Import a CNF file

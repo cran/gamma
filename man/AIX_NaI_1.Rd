@@ -21,13 +21,14 @@ CEREGE Calibration Curve (NaI)
 }
 \examples{
 ## Load the curve
-utils::data(AIX_NaI_1, package = "gamma")
+data(AIX_NaI_1, package = "gamma")
 plot(AIX_NaI_1)
 }
 \seealso{
 Other datasets: 
 \code{\link{BDX_LaBr_1}},
-\code{\link{clermont}}
+\code{\link{clermont}},
+\code{\link{clermont_2024}}
 }
 \concept{datasets}
 \keyword{datasets}

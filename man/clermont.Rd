@@ -5,7 +5,7 @@
 \alias{clermont}
 \title{Clermont Reference Data}
 \format{
-TODO
+A \code{\link{data.frame}} with tabulated data and conversion factor reference.
 }
 \source{
 Guérin, G., Mercier, N. & Adamiec, G. (2011). Dose-Rate Conversion Factors:
@@ -24,7 +24,8 @@ Clermont Reference Data
 \seealso{
 Other datasets: 
 \code{\link{AIX_NaI_1}},
-\code{\link{BDX_LaBr_1}}
+\code{\link{BDX_LaBr_1}},
+\code{\link{clermont_2024}}
 }
 \concept{datasets}
 \keyword{datasets}

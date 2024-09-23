@@ -58,7 +58,7 @@ NULL
 #' Clermont Reference Data
 #'
 #' @usage data("clermont")
-#' @format TODO
+#' @format A [`data.frame`] with tabulated data and conversion factor reference.
 #' @source
 #'  Guérin, G., Mercier, N. & Adamiec, G. (2011). Dose-Rate Conversion Factors:
 #'  Update. *Ancient TL*, 29(1), p. 5-8.
@@ -70,20 +70,54 @@ NULL
 #' @keywords datasets
 "clermont"
 
+# ==============================================================================
+#' Clermont Reference Data 2024
+#'
+#' An updated version for the `clermont` dataset with additional columns
+#' for the applied dose rate conversion factors and their reference. The dataset
+#' also contains gamma dose rate values and uncertainties for different published
+#' conversion factors. Please note that the values for the conversion factors
+#' applied in the original `clermont` dataset differ slightly due to rounding
+#' errors.
+#'
+#' @usage data("clermont_2024")
+#' @format A [`data.frame`] with tabulated data and conversion factor reference.
+#' @source
+#'  Adamiec, G. & Aitken, M.J. (1998).
+#'  Dose-rate conversion factors: update. *Ancient TL*, 16, p. 37–50.
+#'
+#'  Cresswell, A.J., Carter, J. & Sanderson, D.C.W. (2018). Dose rate
+#'  conversion parameters: Assessment of nuclear data.
+#'  *Radiation Measurements*, 120, p. 195–201.
+#'
+#'  Guérin, G., Mercier, N. & Adamiec, G. (2011). Dose-Rate Conversion Factors:
+#'  Update. *Ancient TL*, 29(1), p. 5-8.
+#'
+#'  Liritzis, I., Stamoulis, K., Papachristodoulou, C. & Ioannides, K. (2013).
+#'  A re-evaluation of radiation dose-rate conversion factors.
+#'  *Mediterranean Archaeology and Archaeometry*, 12, p. 1–15.
+#'
+#'  Miallier, D., Guérin, G., Mercier, N., Pilleyre, T. & Sanzelle, S.
+#'  (2009). The Clermont Radiometric Reference Rocks: A Convenient Tool
+#'  for Dosimetric Purposes. *Ancient TL*, 27(2), p. 37-44.
+#' @family datasets
+#' @keywords datasets
+"clermont_2024"
+
 #' CEREGE Calibration Curve (NaI)
 #'
 #' @usage data(AIX_NaI_1)
 #' @format
 #' An object of class [CalibrationCurve-class].
 #' \tabular{ll}{
-#'  \strong{Laboratory} \tab CEREGE \cr
-#'  \strong{Instrument} \tab Canberra Inspector 1000 \cr
-#'  \strong{Detector} \tab NaI \cr
-#'  \strong{Authors} \tab CEREGE Luminescence Team
+#'  **Laboratory** \tab CEREGE \cr
+#'  **Instrument** \tab Canberra Inspector 1000 \cr
+#'  **Detector** \tab NaI \cr
+#'  **Authors** \tab CEREGE Luminescence Team
 #' }
 #' @examples
 #' ## Load the curve
-#' utils::data(AIX_NaI_1, package = "gamma")
+#' data(AIX_NaI_1, package = "gamma")
 #' plot(AIX_NaI_1)
 #' @family datasets
 #' @keywords datasets
@@ -95,14 +129,14 @@ NULL
 #' @format
 #' An object of class [CalibrationCurve-class].
 #' \tabular{ll}{
-#'  \strong{Laboratory} \tab IRAMAT-CRP2A (UMR 5060) \cr
-#'  \strong{Instrument} \tab Canberra Inspector 1000 \cr
-#'  \strong{Detector} \tab LaBr \cr
-#'  \strong{Authors} \tab CRP2A Luminescence Team
+#'  **Laboratory** \tab IRAMAT-CRP2A (UMR 5060) \cr
+#'  **Instrument** \tab Canberra Inspector 1000 \cr
+#'  **Detector** \tab LaBr \cr
+#'  **Authors** \tab CRP2A Luminescence Team
 #' }
 #' @examples
 #' ## Load the curve
-#' utils::data(BDX_LaBr_1, package = "gamma")
+#' data(BDX_LaBr_1, package = "gamma")
 #' plot(BDX_LaBr_1)
 #' @family datasets
 #' @keywords datasets

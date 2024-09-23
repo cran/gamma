@@ -7,7 +7,7 @@ NULL
 #' @aliases dose_fit,GammaSpectra,GammaSpectrum,matrix-method
 setMethod(
   f = "dose_fit",
-  signature = signature(object = "GammaSpectra", background = "GammaSpectrum",
+  signature = signature(object = "GammaSpectra", background = "GammaSpectrumOrNumeric",
                         doses = "matrix"),
   definition = function(object, background, doses, range_Ni, range_NiEi,
                         details = list(authors = "", date = Sys.time())) {
@@ -22,7 +22,7 @@ setMethod(
 #' @aliases dose_fit,GammaSpectra,data.frame-method
 setMethod(
   f = "dose_fit",
-  signature = signature(object = "GammaSpectra", background = "GammaSpectrum",
+  signature = signature(object = "GammaSpectra", background = "GammaSpectrumOrNumeric",
                         doses = "data.frame"),
   definition = function(object, background, doses, range_Ni, range_NiEi,
                         details = list(authors = "", date = Sys.time())) {
@@ -33,10 +33,53 @@ setMethod(
       stop(sprintf("%s is missing row names.", sQuote("doses")), call. = FALSE)
     doses <- doses[, c(1, 2)]
 
+    ## check for energy calibration, if some have calibration others are not,
+    ## something likely went wrong
+    ## with this checks we are certain that after we can expect two cases: no calibration
+    ## or calibration
+    if (!all(vapply(object, has_calibration, logical(1))) & any(vapply(object, has_calibration, logical(1))))
+      stop("You must not mix spectra with and without energy/channel calibration!", call. = FALSE)
+
+    if (all(!vapply(object, has_calibration, logical(1))))
+      warning("All spectra without energy calibration. You can proceed but it is not recommended!", call. = FALSE)
+
     # Metadata
     info <- if (is.list(details)) details else list()
+
+    ## always add sysdata
     if (is.null(info$date))
       info$date <- Sys.time()
+
+    ## if not available, we try to grep the calibration data and
+    ## assign it to the object
+    if (is.null(info$energy_calibration)) {
+      info$energy_calibration <- NA
+
+      ## more complicated, we have calibrations, but they do not match in such ca
+      ## get the values from the first calibration
+      cal_1st <- object[[1]]@calibration
+
+      ## compare whether they are identical if yes, we set a single calibration
+      if (all(vapply(object, has_calibration, logical(1))) &&
+        all(vapply(object, function(x) identical(cal_1st[1], x@calibration[1]), logical(1)))) {
+
+        info$energy_calibration <- list(cal_1st)
+
+      } else if (all(vapply(object, has_calibration, logical(1)))){
+        ## now we assign all calibrations we have
+        info$energy_calibration <- lapply(object, function(x) x@calibration)
+
+      }
+
+      # if not NA set names
+      if (!any(is.na(info$energy_calibration[[1]]))) {
+        if(length(info$energy_calibration) > 1)
+          names(info$energy_calibration) <- unlist(lapply(object, function(x) x@name))
+        else
+          names(info$energy_calibration) <- "single_calibration"
+
+      }
+    }
 
     # Fit linear regression (York)
     Ni <- fit_york(object, background, doses, range = range_Ni, energy = FALSE)
@@ -51,14 +94,18 @@ setMethod(
 )
 
 fit_york <- function(object, background, doses, range, energy = FALSE) {
-  # Signal integration
-  bkg <- signal_integrate(background, range = range, energy = energy)
+  # Signal integration if we have a GammaSpectrum-class for the background
+  if (inherits(background, "GammaSpectrum"))
+    bkg <- signal_integrate(background, range = range, energy = energy)
+  else
+    bkg <- background
+
   signals <- signal_integrate(object, background = bkg, range = range,
                               energy = energy, simplify = TRUE)
 
   # Prepare data
   data <- merge(signals, doses, by = 0, all = FALSE, sort = FALSE)
-  colnames(data) <- c("names", "signal_value", "signal_error",
+  colnames(data) <- c("name", "signal_value", "signal_error",
                       "gamma_dose", "gamma_error")
 
   # Fit model

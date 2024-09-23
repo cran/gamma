@@ -13,11 +13,13 @@ library(gamma)
 ## ----import-------------------------------------------------------------------
 # Import CNF files for calibration
 spc_dir <- system.file("extdata/AIX_NaI_1/calibration", package = "gamma")
-(spc <- read(spc_dir))
+spc <- read(spc_dir)
+spc
 
 # Import a CNF file of background measurement
 bkg_dir <- system.file("extdata/AIX_NaI_1/background", package = "gamma")
-(bkg <- read(bkg_dir))
+bkg <- read(bkg_dir)
+bkg
 
 ## ----signal-------------------------------------------------------------------
 # Spectrum pre-processing
@@ -93,7 +95,7 @@ plot(PEP, pks) +
 lines <- data.frame(
   channel = c(86, 496, 870),
   energy = c(238, 1461, 2615)
-)
+) 
 bkg_scaled <- energy_calibrate(bkg, lines = lines)
 
 ## ----plot-bkg, echo=FALSE-----------------------------------------------------
@@ -104,35 +106,53 @@ plot(bkg_scaled, xaxis = "energy", yaxis = "rate") +
 ## ----calibrate-spc------------------------------------------------------------
 spc_scaled <- list(BRIQUE, C341, C347, GOU, PEP)
 spc_scaled <- methods::as(spc_scaled, "GammaSpectra")
+spc_scaled
 
 ## ----integrate-Ni-------------------------------------------------------------
 # Integration range (in keV)
 Ni_range <- c(200, 2800)
 
 # Integrate background spectrum
-(Ni_bkg <- signal_integrate(bkg_scaled, range = Ni_range, energy = FALSE))
+Ni_bkg <- signal_integrate(
+  object = bkg_scaled, 
+  range = Ni_range, 
+  energy = FALSE)
 
 # Integrate reference spectra
-(Ni_spc <- signal_integrate(spc_scaled, range = Ni_range, background = Ni_bkg, 
-                            energy = FALSE, simplify = TRUE))
+Ni_spc <- signal_integrate(
+  object = spc_scaled, 
+  range = Ni_range, 
+  background = Ni_bkg, 
+  energy = FALSE, 
+  simplify = TRUE)
 
 ## ----integrate-NiEi-----------------------------------------------------------
 # Integration range (in keV)
 NiEi_range <- c(200, 2800)
 
 # Integrate background spectrum
-(NiEi_bkg <- signal_integrate(bkg_scaled, range = NiEi_range, energy = TRUE))
+NiEi_bkg <- signal_integrate(
+  object = bkg_scaled, 
+  range = NiEi_range, 
+  energy = TRUE)
 
 # Integrate reference spectra
-(NiEi_signal <- signal_integrate(spc_scaled, range = NiEi_range, 
-                                 background = NiEi_bkg, energy = TRUE,
-                                 simplify = TRUE))
+NiEi_signal <- signal_integrate(
+  object = spc_scaled, 
+  range = NiEi_range, 
+  background = NiEi_bkg, 
+  energy = TRUE,
+  simplify = TRUE)
 
-## ----calibration, fig.width=3.5, fig.show='hold'------------------------------
+## -----------------------------------------------------------------------------
 # Get reference dose rates
 data("clermont")
 doses <- clermont[, c("gamma_dose", "gamma_error")]
 
+## ----echo = FALSE-------------------------------------------------------------
+knitr::kable(clermont)
+
+## -----------------------------------------------------------------------------
 # Metadata
 info <- list(
   laboratory = "CEREGE",
@@ -141,21 +161,31 @@ info <- list(
   authors = "CEREGE Luminescence Team"
 )
 
+## -----------------------------------------------------------------------------
 # Build the calibration curve
 AIX_NaI <- dose_fit(
-  spc_scaled, background = bkg_scaled, doses = doses,
-  range_Ni = Ni_range, range_NiEi = NiEi_range,
+  object = spc_scaled, 
+  background = bkg_scaled, 
+  doses = doses,
+  range_Ni = Ni_range, 
+  range_NiEi = NiEi_range,
   details = info
 )
+AIX_NaI 
 
-# Summary
+## -----------------------------------------------------------------------------
+# show summary
 summarise(AIX_NaI)
 
-# Plot curve
-plot(AIX_NaI, model = "Ni") +
+## ----calibration, fig.width=3.5, fig.show='hold'------------------------------
+# plot calibration curves
+plot(AIX_NaI, energy = FALSE) +
   ggplot2::theme_bw()
-plot(AIX_NaI, model = "NiEi") +
+plot(AIX_NaI, energy = TRUE) +
   ggplot2::theme_bw()
+
+## ----eval=FALSE---------------------------------------------------------------
+#  save(AIX_NaI, file = "<you_path>/<date>_NaI_DoseRate_Calibration.rda")
 
 ## ----save, eval=FALSE, echo=FALSE---------------------------------------------
 #  # DANGER ZONE
@@ -252,18 +282,38 @@ ggplot2::ggplot(NiEi_residuals, ggplot2::aes(sample = standardized)) +
 #   ggplot2::labs(title = "Cook's distance",
 #                 x = "Observation", y = "D")
 
-## ----predict------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # Import CNF files for dose rate prediction
 test_dir <- system.file("extdata/AIX_NaI_1/test", package = "gamma")
-(test <- read(test_dir))
+test <- read(test_dir)
 
+## ----predict------------------------------------------------------------------
 # Inspect spectra
 plot(test, yaxis = "rate") +
   ggplot2::theme_bw()
 
-# Dose rate prediction
-# (assuming that the energy scale of each spectrum was adjusted first)
-(rates <- dose_predict(AIX_NaI, test, sigma = 2))
+## -----------------------------------------------------------------------------
+# Pb212, K40, Tl208
+pks <- data.frame(
+  channel = c(86, 490, 870),
+  energy = c(238, 1461, 2615)
+) |> as("PeakPosition")
+
+## energy calibrate
+test <- energy_calibrate(test, pks)
+
+## check the calibration for one curve
+plot(test[[1]], pks) +
+  ggplot2::theme_bw()
+
+## show all energy calibrated spectra 
+# Inspect spectra
+plot(test, xaxis = "energy", yaxis = "rate") +
+  ggplot2::theme_bw()
+
+## -----------------------------------------------------------------------------
+rates <- dose_predict(AIX_NaI, test, sigma = 1.96)
+rates
 
 ## ----session-info, echo=FALSE-------------------------------------------------
 sessionInfo()

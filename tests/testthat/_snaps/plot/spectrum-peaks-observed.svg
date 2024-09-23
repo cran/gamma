@@ -52,6 +52,6 @@
 <text x='381.00' y='32.64' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='62.99px' lengthAdjust='spacingAndGlyphs'>Energy [keV]</text>
 <text x='381.00' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='40.98px' lengthAdjust='spacingAndGlyphs'>Channel</text>
 <text transform='translate(13.05,296.65) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='34.86px' lengthAdjust='spacingAndGlyphs'>Counts</text>
-<text x='47.48' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='96.88px' lengthAdjust='spacingAndGlyphs'>spectrum_peaks</text>
+<text x='47.48' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='158.53px' lengthAdjust='spacingAndGlyphs'>spectrum_peaks_observed</text>
 </g>
 </svg>

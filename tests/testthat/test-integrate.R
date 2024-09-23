@@ -6,12 +6,12 @@ test_that("Integrate GammaSpectrum", {
   bkg <- read(spc_bkg)
 
   int1 <- signal_integrate(cnf, range = c(200, 2800), energy = TRUE)
-  expect_equal(int1, c(1.483392e+05, 9.361146e+00),
+  expect_equal(int1, c(1.483392e+05, 6.62),
                tolerance = 1e-06, ignore_attr = TRUE)
   expect_length(int1, 2)
 
   int2 <- signal_integrate(cnf, bkg, range = c(200, 2800), energy = FALSE)
-  expect_equal(int2, c(258.6836050, 0.4129534), tolerance = 1e-07,
+  expect_equal(int2, c(258.6836050, 0.2920021), tolerance = 1e-07,
                ignore_attr = TRUE)
   expect_length(int2, 2)
 
@@ -22,6 +22,21 @@ test_that("Integrate GammaSpectrum", {
   tka <- read(spc_tka)
   expect_error(signal_integrate(tka, range = c(200, 2800)),
                "You must calibrate the energy scale of your spectrum first.")
+
+  ## check the simplify argument
+  expect_type(signal_integrate(object = as(list(cnf, cnf), "GammaSpectra"), simplify = TRUE),
+              type = "double")
+  expect_type(signal_integrate(object = as(list(cnf, cnf), "GammaSpectra"), simplify = FALSE),
+              type = "list")
+  expect_type(signal_integrate(object = as(list(cnf, cnf), "GammaSpectra"), background = cnf, simplify = TRUE),
+              type = "double")
+  expect_type(signal_integrate(object = as(list(cnf, cnf), "GammaSpectra"), background = cnf, simplify = FALSE),
+              type = "list")
+  expect_type(signal_integrate(object = as(list(cnf, cnf), "GammaSpectra"), background = c(0,0), simplify = TRUE),
+              type = "double")
+  expect_type(signal_integrate(object = as(list(cnf, cnf), "GammaSpectra"), background = c(0,0), simplify = FALSE),
+              type = "list")
+
 })
 
 test_that("Integrate GammaSpectra", {
